@@ -15,7 +15,7 @@ db.connect((err) => {
   if (err) {
     throw err;
   }
-  console.log("MySQL Connected");
+  // console.log("MySQL Connected");
 });
 
 const app2 = express();
