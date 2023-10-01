@@ -1,6 +1,6 @@
-const db = require("../model/db-connection");
+const pool = require("../model/db-connection");
 
 exports.getDataFromDb = () => {
-  const getQuery = "insert into nodemysql.users(id) values (4)";
-  return db.query(getQuery);
+  const getQuery = "select * from nodemysql.users";
+  return pool.query(getQuery);
 };

@@ -1,39 +1,28 @@
 const express = require("express");
-const mysql = require("mysql2");
-const port = process.env.port || 5001;
+const mysql = require("mysql2/promise");
+const port = process.env.PORT || 5001;
 
-let wrapper = {};
-//Create Connection
-const db = mysql.createConnection({
+// Create Connection Pool
+const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
+  database: "nodemysql", // Specify the database you want to connect to
+  connectionLimit: 10, // Adjust the limit as per your requirements
 });
 
-//Connect to MySQL
-db.connect((err) => {
-  if (err) {
-    throw err;
-  }
-  // console.log("MySQL Connected");
+const app = express();
+
+app.get("/createdDb", (req, res) => {
+  // You can use the pool to execute queries
+  pool.query("CREATE DATABASE IF NOT EXISTS nodemysql", (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Database creation failed");
+    } else {
+      res.send("Database Created");
+    }
+  });
 });
 
-const app2 = express();
-// app2.get("/createdDb", (req, res) => {
-//   let sql = "CREATE DATABASE nodemysql";
-//   db.query(sql, (err) => {
-//     if (err) {
-//       throw err;
-//     }
-//     res.send("Database Created");
-//   });
-// });
-// app2.listen(port);
-
-const pool = mysql.createPool(db, (err) => {
-  if (err) {
-    throw err;
-  }
-  res.send("Database Created");
-});
-module.exports = db;
+module.exports = pool;
