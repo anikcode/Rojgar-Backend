@@ -2,13 +2,18 @@ const db = require("../model/db");
 exports.requestToGetData = async (req, res) => {
   try {
     const result = await db.getDataFromDb();
-    res.json({
-      message: "success",
-      data: result[0],
-    });
+    // res.json({
+    //   message: "success",
+    //   data: result[0],
+    if (result[0]) {
+      const err = new Error("Lo aa gya error backend se");
+      throw err;
+    }
+    // });
   } catch (err) {
     res.json({
-      message: err,
+      message: "failure",
+      errorMessage: err.message || "Errorrrrr",
     });
   }
 
