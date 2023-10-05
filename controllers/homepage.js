@@ -1,6 +1,8 @@
 const db = require("../model/db");
+const logger = require("../logger");
 exports.requestToGetData = async (req, res) => {
   try {
+    logger.info.msg("hello");
     const result = await db.getDataFromDb();
     // res.json({
     //   message: "success",
