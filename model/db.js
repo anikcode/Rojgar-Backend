@@ -12,3 +12,10 @@ exports.onboardUserToPortal = (name, password, phone, email) => {
     "insert into rojgar.users(name, password, phone, email) values(?,?,?,?)";
   return pool.query(getQuery, [name, password, phone, email]);
 };
+
+exports.verifyUserToLogin = (email, password) => {
+  logger.info({ email, password }, "[verifyUserToLogin]");
+  const getQuery =
+    "select id from rojgar.users where email = ? and password = ?";
+  return pool.query(getQuery, [email, password]);
+};

@@ -40,6 +40,32 @@ exports.requestToRegister = async (req, res) => {
   }
 };
 
+exports.requestToLogin = async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  try {
+    logger.info({ password, email }, "[requestToLogin]");
+    const userDetails = await db.verifyUserToLogin(email, password);
+    logger.info(userDetails[0].length, "[User details]");
+    if (userDetails[0] && userDetails[0].length == 0) {
+      const err = new Error("Email or password is incorrect");
+      throw err;
+    } else {
+      res.set({
+        "Access-Control-Allow-Origin": "*",
+      });
+      res.json({
+        message: "success",
+      });
+    }
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Errorrrrr",
+    });
+  }
+};
+
 // app.post("/login", (req, res) => {
 //   const user = {
 //     id: 1,
