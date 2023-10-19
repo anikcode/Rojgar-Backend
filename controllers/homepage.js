@@ -41,3 +41,42 @@ exports.requestToGetData = async (req, res) => {
   //   res.send("Database Created");
   // });
 };
+
+exports.saveProfileDetails = async (req, res) => {
+  const dob = req.body.dob;
+  const name = req.body.name;
+  const gender = req.body.gender;
+  const careerBreak = req.body.careerBreak;
+  const address = req.body.address;
+  logger.debug(
+    { dob, name, gender, careerBreak, address },
+    "[profile deatils]"
+  );
+  try {
+    await db.saveProfileDetails(dob, name, gender, careerBreak, address);
+    res.json({
+      message: "success",
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};
+
+exports.getProfileDetails = async (req, res) => {
+  try {
+    const response = await db.getProfileDetail();
+    logger.debug(response[0]);
+    res.json({
+      message: "success",
+      response: response[0],
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};
