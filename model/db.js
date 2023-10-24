@@ -19,14 +19,35 @@ exports.verifyUserToLogin = (email, password) => {
     "select id from rojgar.users where email = ? and password = ?";
   return pool.query(getQuery, [email, password]);
 };
-exports.saveProfileDetails = (dob, name, gender, careerBreak, address) => {
+exports.saveProfileDetails = (
+  dob,
+  name,
+  gender,
+  careerBreak,
+  address,
+  isEdit,
+  userId
+) => {
   logger.debug(
-    { dob, name, gender, careerBreak, address },
-    "[profile deatils in db]"
+    { dob, name, gender, careerBreak, address, isEdit, userId },
+    "[profile details in db]"
   );
-  const getQuery =
-    "insert into rojgar.employees_profile(dob, name, gender, career_break, address) values(?,?,?,?,?)";
-  return pool.query(getQuery, [dob, name, gender, careerBreak, address]);
+  if (isEdit == "edit") {
+    const getQuery =
+      "update rojgar.employees_profile set dob = ?, name=?, gender=?, career_break=?, address=? where id=?";
+    return pool.query(getQuery, [
+      dob,
+      name,
+      gender,
+      careerBreak,
+      address,
+      userId,
+    ]);
+  } else {
+    const getQuery =
+      "insert into rojgar.employees_profile(dob, name, gender, career_break, address) values(?,?,?,?,?)";
+    return pool.query(getQuery, [dob, name, gender, careerBreak, address]);
+  }
 };
 
 exports.getProfileDetail = () => {

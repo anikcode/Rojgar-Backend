@@ -48,12 +48,22 @@ exports.saveProfileDetails = async (req, res) => {
   const gender = req.body.gender;
   const careerBreak = req.body.careerBreak;
   const address = req.body.address;
+  const isEdit = req.body.isEdit;
+  const userId = req.body.userId;
   logger.debug(
-    { dob, name, gender, careerBreak, address },
+    { dob, name, gender, careerBreak, address, userId },
     "[profile deatils]"
   );
   try {
-    await db.saveProfileDetails(dob, name, gender, careerBreak, address);
+    await db.saveProfileDetails(
+      dob,
+      name,
+      gender,
+      careerBreak,
+      address,
+      isEdit,
+      userId
+    );
     res.json({
       message: "success",
     });
