@@ -90,3 +90,63 @@ exports.getProfileDetails = async (req, res) => {
     });
   }
 };
+
+exports.getCareerDetails = async (req, res) => {
+  try {
+    const response = await db.getCareerDetail();
+    logger.debug(response[0]);
+    res.json({
+      message: "success",
+      response: response[0],
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};
+
+exports.saveCareerDetails = async (req, res) => {
+  const company = req.body.company;
+  const employmentType = req.body.employmentType;
+  const totalExperience = req.body.totalExperience;
+  const name = req.body.name;
+  const designation = req.body.designation;
+  const joiningDate = req.body.joiningDate;
+  const workedTill = req.body.workedTill;
+  const isEdit = req.body.isEdit;
+  logger.debug(
+    {
+      company,
+      employmentType,
+      totalExperience,
+      name,
+      designation,
+      joiningDate,
+      workedTill,
+      isEdit,
+    },
+    "[save career details]"
+  );
+  try {
+    await db.saveCareerDetails(
+      company,
+      employmentType,
+      totalExperience,
+      name,
+      designation,
+      joiningDate,
+      workedTill,
+      isEdit
+    );
+    res.json({
+      message: "success",
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};

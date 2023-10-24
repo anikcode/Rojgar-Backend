@@ -13,5 +13,7 @@ router.post("/register", authController.requestToRegister);
 router.post("/login", authController.requestToLogin);
 router.post("/save-profile-details", homepageController.saveProfileDetails);
 router.get("/get-profile-details", homepageController.getProfileDetails);
+router.post("/save-career-details", homepageController.saveCareerDetails);
+router.get("/get-career-details", homepageController.getCareerDetails);
 
 module.exports = router;

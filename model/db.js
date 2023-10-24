@@ -54,3 +54,58 @@ exports.getProfileDetail = () => {
   const getQuery = "select * from rojgar.employees_profile";
   return pool.query(getQuery);
 };
+
+exports.getCareerDetail = () => {
+  const getQuery = "select * from rojgar.employees_career";
+  return pool.query(getQuery);
+};
+
+exports.saveCareerDetails = (
+  company,
+  employmentType,
+  totalExperience,
+  name,
+  designation,
+  joiningDate,
+  workedTill,
+  isEdit
+) => {
+  logger.debug(
+    {
+      company,
+      employmentType,
+      totalExperience,
+      name,
+      designation,
+      joiningDate,
+      workedTill,
+      isEdit,
+    },
+    "[save career details in db]"
+  );
+  if (isEdit == "edit") {
+    const getQuery =
+      "update rojgar.employees_career set company = ?, employment_type=?, total_experience=?, name=?, designation=?,joining_date=?, worked_till where id=?";
+    return pool.query(getQuery, [
+      company,
+      employmentType,
+      totalExperience,
+      name,
+      designation,
+      joiningDate,
+      workedTill,
+    ]);
+  } else {
+    const getQuery =
+      "insert into rojgar.employees_career (company,employment_type ,total_experience ,name,designation,joining_date ,worked_till) values(?,?,?,?,?,?,?)";
+    return pool.query(getQuery, [
+      company,
+      employmentType,
+      totalExperience,
+      name,
+      designation,
+      joiningDate,
+      workedTill,
+    ]);
+  }
+};
