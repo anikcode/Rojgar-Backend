@@ -108,6 +108,7 @@ exports.getCareerDetails = async (req, res) => {
 };
 
 exports.saveCareerDetails = async (req, res) => {
+  const id = req.body.id;
   const company = req.body.company;
   const employmentType = req.body.employmentType;
   const totalExperience = req.body.totalExperience;
@@ -116,8 +117,10 @@ exports.saveCareerDetails = async (req, res) => {
   const joiningDate = req.body.joiningDate;
   const workedTill = req.body.workedTill;
   const isEdit = req.body.isEdit;
+  const jobDescription = req.body.jobDescription;
   logger.debug(
     {
+      id,
       company,
       employmentType,
       totalExperience,
@@ -126,11 +129,13 @@ exports.saveCareerDetails = async (req, res) => {
       joiningDate,
       workedTill,
       isEdit,
+      jobDescription,
     },
     "[save career details]"
   );
   try {
     await db.saveCareerDetails(
+      id,
       company,
       employmentType,
       totalExperience,
@@ -138,10 +143,97 @@ exports.saveCareerDetails = async (req, res) => {
       designation,
       joiningDate,
       workedTill,
+      jobDescription,
       isEdit
     );
     res.json({
       message: "success",
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};
+
+exports.saveProjectDetails = async (req, res) => {
+  const id = req.body.id;
+  const title = req.body.title;
+  const description = req.body.description;
+  const joiningDate = req.body.joiningDate;
+  const workedTill = req.body.workedTill;
+  const isEdit = req.body.isEdit;
+  logger.debug(
+    {
+      id,
+      title,
+      joiningDate,
+      workedTill,
+      isEdit,
+      description,
+    },
+    "[save project details]"
+  );
+  try {
+    await db.saveProjectDetails(
+      id,
+      title,
+      description,
+      joiningDate,
+      workedTill,
+      isEdit
+    );
+    res.json({
+      message: "success",
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};
+
+exports.deleteEmploymentDetails = async (req, res) => {
+  const id = req.body.id;
+  logger.debug({ id }, "[deleting id]");
+  try {
+    await db.deleteEmploymentDetails(id);
+    res.json({
+      message: "success",
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};
+
+exports.deleteProjectDetails = async (req, res) => {
+  const id = req.body.id;
+  logger.debug({ id }, "[deleting id]");
+  try {
+    await db.deleteProjectDetails(id);
+    res.json({
+      message: "success",
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};
+
+exports.getProjectDetails = async (req, res) => {
+  try {
+    const response = await db.getProjectDetail();
+    logger.debug(response[0]);
+    res.json({
+      message: "success",
+      response: response[0],
     });
   } catch (err) {
     res.json({

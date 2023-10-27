@@ -14,6 +14,13 @@ router.post("/login", authController.requestToLogin);
 router.post("/save-profile-details", homepageController.saveProfileDetails);
 router.get("/get-profile-details", homepageController.getProfileDetails);
 router.post("/save-career-details", homepageController.saveCareerDetails);
+router.post("/save-project-details", homepageController.saveProjectDetails);
 router.get("/get-career-details", homepageController.getCareerDetails);
+router.get("/get-project-details", homepageController.getProjectDetails);
+router.post(
+  "/delete-career-details",
+  homepageController.deleteEmploymentDetails
+);
+router.post("/delete-project-details", homepageController.deleteProjectDetails);
 
 module.exports = router;

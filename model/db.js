@@ -19,6 +19,7 @@ exports.verifyUserToLogin = (email, password) => {
     "select id from rojgar.users where email = ? and password = ?";
   return pool.query(getQuery, [email, password]);
 };
+
 exports.saveProfileDetails = (
   dob,
   name,
@@ -60,7 +61,13 @@ exports.getCareerDetail = () => {
   return pool.query(getQuery);
 };
 
+exports.getProjectDetail = () => {
+  const getQuery = "select * from rojgar.employees_projects";
+  return pool.query(getQuery);
+};
+
 exports.saveCareerDetails = (
+  id,
   company,
   employmentType,
   totalExperience,
@@ -68,10 +75,12 @@ exports.saveCareerDetails = (
   designation,
   joiningDate,
   workedTill,
+  jobDescription,
   isEdit
 ) => {
   logger.debug(
     {
+      id,
       company,
       employmentType,
       totalExperience,
@@ -79,13 +88,14 @@ exports.saveCareerDetails = (
       designation,
       joiningDate,
       workedTill,
+      jobDescription,
       isEdit,
     },
     "[save career details in db]"
   );
   if (isEdit == "edit") {
     const getQuery =
-      "update rojgar.employees_career set company = ?, employment_type=?, total_experience=?, name=?, designation=?,joining_date=?, worked_till where id=?";
+      "update rojgar.employees_career set company = ?, employment_type=?, total_experience=?, name=?, designation=?,joining_date=?, worked_till=?, job_description=? where id=?";
     return pool.query(getQuery, [
       company,
       employmentType,
@@ -94,10 +104,12 @@ exports.saveCareerDetails = (
       designation,
       joiningDate,
       workedTill,
+      jobDescription,
+      id,
     ]);
   } else {
     const getQuery =
-      "insert into rojgar.employees_career (company,employment_type ,total_experience ,name,designation,joining_date ,worked_till) values(?,?,?,?,?,?,?)";
+      "insert into rojgar.employees_career (company,employment_type ,total_experience ,name,designation,joining_date ,worked_till, job_description) values(?,?,?,?,?,?,?,?)";
     return pool.query(getQuery, [
       company,
       employmentType,
@@ -106,6 +118,55 @@ exports.saveCareerDetails = (
       designation,
       joiningDate,
       workedTill,
+      jobDescription,
     ]);
   }
+};
+
+exports.saveProjectDetails = (
+  id,
+  title,
+  description,
+  joiningDate,
+  workedTill,
+  isEdit
+) => {
+  logger.debug(
+    {
+      id,
+      title,
+      joiningDate,
+      workedTill,
+      description,
+      isEdit,
+    },
+    "[save career details in db]"
+  );
+  if (isEdit == "edit") {
+    const getQuery =
+      "update rojgar.employees_projects set title = ?,project_description=?, start_date=?, end_date=? where id=?";
+    return pool.query(getQuery, [
+      title,
+      description,
+      joiningDate,
+      workedTill,
+      id,
+    ]);
+  } else {
+    const getQuery =
+      "insert into rojgar.employees_projects (title,project_description,start_date ,end_date) values(?,?,?,?)";
+    return pool.query(getQuery, [title, description, joiningDate, workedTill]);
+  }
+};
+
+exports.deleteEmploymentDetails = (id) => {
+  logger.debug({ id }, "[deleting id from db]");
+  const getQuery = "delete from rojgar.employees_career where id = ?";
+  return pool.query(getQuery, [id]);
+};
+
+exports.deleteProjectDetails = (id) => {
+  logger.debug({ id }, "[deleting id from db]");
+  const getQuery = "delete from rojgar.employees_projects where id = ?";
+  return pool.query(getQuery, [id]);
 };
