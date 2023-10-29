@@ -66,6 +66,11 @@ exports.getProjectDetail = () => {
   return pool.query(getQuery);
 };
 
+exports.getEducationDetails = () => {
+  const getQuery = "select * from rojgar.employees_education";
+  return pool.query(getQuery);
+};
+
 exports.saveCareerDetails = (
   id,
   company,
@@ -159,6 +164,55 @@ exports.saveProjectDetails = (
   }
 };
 
+exports.saveEducationDetails = (
+  id,
+  schoolName,
+  degreeName,
+  joiningDate,
+  workedTill,
+  grade,
+  description,
+  isEdit
+) => {
+  logger.debug(
+    {
+      id,
+      schoolName,
+      degreeName,
+      joiningDate,
+      workedTill,
+      grade,
+      description,
+      isEdit,
+    },
+    "[save education details in db]"
+  );
+  if (isEdit == "edit") {
+    const getQuery =
+      "update rojgar.employees_education set school = ?,degree=?,start_date=?, end_date=?,grade=?,description=? where id=?";
+    return pool.query(getQuery, [
+      schoolName,
+      degreeName,
+      joiningDate,
+      workedTill,
+      grade,
+      description,
+      id,
+    ]);
+  } else {
+    const getQuery =
+      "insert into rojgar.employees_education (school,degree,start_date ,end_date,grade,description) values(?,?,?,?,?,?)";
+    return pool.query(getQuery, [
+      schoolName,
+      degreeName,
+      joiningDate,
+      workedTill,
+      grade,
+      description,
+    ]);
+  }
+};
+
 exports.deleteEmploymentDetails = (id) => {
   logger.debug({ id }, "[deleting id from db]");
   const getQuery = "delete from rojgar.employees_career where id = ?";
@@ -168,5 +222,11 @@ exports.deleteEmploymentDetails = (id) => {
 exports.deleteProjectDetails = (id) => {
   logger.debug({ id }, "[deleting id from db]");
   const getQuery = "delete from rojgar.employees_projects where id = ?";
+  return pool.query(getQuery, [id]);
+};
+
+exports.deleteEducationDetails = (id) => {
+  logger.debug({ id }, "[deleting id from db]");
+  const getQuery = "delete from rojgar.employees_education where id = ?";
   return pool.query(getQuery, [id]);
 };

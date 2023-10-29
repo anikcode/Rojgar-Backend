@@ -22,5 +22,10 @@ router.post(
   homepageController.deleteEmploymentDetails
 );
 router.post("/delete-project-details", homepageController.deleteProjectDetails);
-
+router.post(
+  "/delete-education-details",
+  homepageController.deleteEducationDetails
+);
+router.get("/get-education-details", homepageController.getEducationDetails);
+router.post("/save-education-details", homepageController.saveEducationDetails);
 module.exports = router;

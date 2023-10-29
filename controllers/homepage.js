@@ -107,6 +107,22 @@ exports.getCareerDetails = async (req, res) => {
   }
 };
 
+exports.getEducationDetails = async (req, res) => {
+  try {
+    const response = await db.getEducationDetails();
+    logger.debug(response[0]);
+    res.json({
+      message: "success",
+      response: response[0],
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};
+
 exports.saveCareerDetails = async (req, res) => {
   const id = req.body.id;
   const company = req.body.company;
@@ -195,6 +211,50 @@ exports.saveProjectDetails = async (req, res) => {
   }
 };
 
+exports.saveEducationDetails = async (req, res) => {
+  const id = req.body.id;
+  const schoolName = req.body.schoolName;
+  const degreeName = req.body.degreeName;
+  const description = req.body.description;
+  const grade = req.body.grade;
+  const joiningDate = req.body.joiningDate;
+  const workedTill = req.body.workedTill;
+  const isEdit = req.body.isEdit;
+  logger.debug(
+    {
+      id,
+      schoolName,
+      degreeName,
+      joiningDate,
+      workedTill,
+      grade,
+      description,
+      isEdit,
+    },
+    "[save project details]"
+  );
+  try {
+    await db.saveEducationDetails(
+      id,
+      schoolName,
+      degreeName,
+      joiningDate,
+      workedTill,
+      grade,
+      description,
+      isEdit
+    );
+    res.json({
+      message: "success",
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};
+
 exports.deleteEmploymentDetails = async (req, res) => {
   const id = req.body.id;
   logger.debug({ id }, "[deleting id]");
@@ -216,6 +276,22 @@ exports.deleteProjectDetails = async (req, res) => {
   logger.debug({ id }, "[deleting id]");
   try {
     await db.deleteProjectDetails(id);
+    res.json({
+      message: "success",
+    });
+  } catch (err) {
+    res.json({
+      message: "failure",
+      errorMessage: err.message || "Error Occured",
+    });
+  }
+};
+
+exports.deleteEducationDetails = async (req, res) => {
+  const id = req.body.id;
+  logger.debug({ id }, "[deleting id]");
+  try {
+    await db.deleteEducationDetails(id);
     res.json({
       message: "success",
     });
