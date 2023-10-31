@@ -4,6 +4,7 @@ const app = express();
 const secretKey = "aniket@9430";
 const db = require("../model/db");
 const logger = require("../logger");
+const bcrypt = require("bcrypt");
 // const logger = require("../logger");
 // exports.requestToLogin = (req, res) => {
 //   const user = {
@@ -25,12 +26,21 @@ exports.requestToRegister = async (req, res) => {
   const password = req.body.password;
   try {
     logger.info({ name, password, phone, email }, "[requestToRegister]");
-    await db.onboardUserToPortal(name, password, phone, email);
+    const existingUser = await db.verifyUserToLogin(email, password);
+    logger.debug(existingUser[0], "[existingUser[0]]");
+    if (existingUser[0].length > 0) {
+      const err = new Error("User already exist!");
+      throw err;
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await db.onboardUserToPortal(name, hashedPassword, phone, email);
+    const token = jwt.sign({ email: email }, secretKey);
     res.set({
       "Access-Control-Allow-Origin": "*",
     });
     res.json({
       message: "success",
+      token: token,
     });
   } catch (err) {
     res.json({
