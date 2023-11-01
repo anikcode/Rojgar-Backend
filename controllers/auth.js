@@ -33,11 +33,17 @@ exports.requestToRegister = async (req, res) => {
       throw err;
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    await db.onboardUserToPortal(name, hashedPassword, phone, email);
+    await db.onboardUserToPortal(name, password, phone, email);
     const token = jwt.sign({ email: email }, secretKey);
     res.set({
+      Authorization: token,
+      "Access-Control-Expose-Headers": "Authorization",
       "Access-Control-Allow-Origin": "*",
     });
+    // res.set({
+    //   Authorization: token,
+    //   "Access-Control-Expose-Headers": "Authorization",
+    // });
     res.json({
       message: "success",
       token: token,
