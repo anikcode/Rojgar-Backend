@@ -3,6 +3,19 @@ const router = express.Router();
 const path = require("path");
 const cors = require("cors");
 const auth = require("../middleware/auth");
+const limiter = require("express-rate-limit");
+
+const loginLimiter = limiter({
+  windowMs: 1 * 60 * 1000, // 15 minutes
+  limit: 3, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  handler: (req, res) => {
+    console.log(req.ratelimit);
+    res.status(429).json({
+      message: "failure",
+      payload: "too many failed attempts",
+    });
+  },
+});
 
 router.use(express.json());
 router.use(cors());
@@ -11,7 +24,7 @@ const authController = require("../controllers/auth");
 
 router.get("/", homepageController.requestToGetData);
 router.post("/register", authController.requestToRegister);
-router.post("/login", authController.requestToLogin);
+router.post("/login", loginLimiter, authController.requestToLogin);
 router.post(
   "/save-profile-details",
   auth.authenticate,
