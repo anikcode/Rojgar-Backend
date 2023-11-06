@@ -52,7 +52,7 @@ exports.saveProfileDetails = async (req, res) => {
   const userId = req.body.userId;
   logger.debug(
     { dob, name, gender, careerBreak, address, userId },
-    "[profile deatils]"
+    "[profile details]"
   );
   try {
     await db.saveProfileDetails(
